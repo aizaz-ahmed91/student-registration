@@ -5,8 +5,8 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "STUDENT")
@@ -17,10 +17,13 @@ import java.util.List;
 @Setter
 @NamedQueries({
         @NamedQuery(name = "Student.findStudentByCourseNameOrderByStudentNameAsc",
-                query = "SELECT DISTINCT s FROM Student s JOIN FETCH s.courses cr where cr.courseName=:courseName order by s.studentName ASC")
+                query = "SELECT DISTINCT s FROM Student s JOIN FETCH s.courseRegistrations cr where cr.course.courseName IN (:courseName) order by s.studentName ASC")
+        ,
+        @NamedQuery(name = "Student.findStudentByStudentNameAndCourseNameIn",
+                query = "SELECT DISTINCT s FROM Student s JOIN FETCH s.courseRegistrations cr where s.studentName=:studentName AND cr.course.courseName IN (:courseNames) order by s.studentName ASC")
         ,
         @NamedQuery(name = "Student.findStudentByNotOptingCourseNameOrderByStudentNameAsc",
-                query = "SELECT DISTINCT s FROM Student s LEFT JOIN FETCH s.courses cr where s.courses IS EMPTY OR :courseName NOT IN(SELECT DISTINCT crs.courseName FROM s.courses crs) order by s.studentName ASC")
+                query = "SELECT DISTINCT s FROM Student s LEFT JOIN FETCH s.courseRegistrations cr LEFT JOIN FETCH cr.course crs where s.courseRegistrations IS EMPTY OR :courseName NOT IN(SELECT DISTINCT crs.courseName FROM cr.course crs) order by s.studentName ASC")
 })
 public class Student implements Serializable {
 
@@ -33,8 +36,8 @@ public class Student implements Serializable {
     private String studentName;
 
     @JsonIgnoreProperties(value = {"student"})
-    @OneToMany(targetEntity = Course.class, orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, targetEntity = CourseRegistration.class)
     @JoinColumn(name = "STUDENT_ID", referencedColumnName = "STUDENT_ID")
-    private List<Course> courses = new ArrayList<>();
+    private Set<CourseRegistration> courseRegistrations = new HashSet<>();
 
 }

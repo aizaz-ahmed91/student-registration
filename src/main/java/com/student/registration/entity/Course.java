@@ -17,16 +17,14 @@ import java.io.Serializable;
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
+@NamedQuery(name = "Course.getTotalNumberOfCourses", query = "SELECT COUNT(cr) FROM Course cr")
 public class Course implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "COURSE_ID", unique = true, nullable = false)
     private Long courseId;
 
-    @Column(name = "COURSE_NAME", nullable = false)
+    @Column(name = "COURSE_NAME", unique = true, nullable = false)
     private String courseName;
-
-    @Embedded
-    private CourseScores courseScores;
 
 }

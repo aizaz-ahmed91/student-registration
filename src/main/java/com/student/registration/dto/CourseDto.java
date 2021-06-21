@@ -3,8 +3,7 @@ package com.student.registration.dto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
-
-import javax.validation.constraints.NotEmpty;
+import org.springframework.lang.NonNull;
 
 @Builder
 @AllArgsConstructor
@@ -17,7 +16,9 @@ import javax.validation.constraints.NotEmpty;
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class CourseDto {
     private Long courseId;
-    @NotEmpty
+    @NonNull
     private String courseName;
-    private Double courseScore;
+    private Double marksObtained;
+    private Integer totalMarks;
+
 }

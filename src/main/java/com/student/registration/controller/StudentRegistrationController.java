@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.PostConstruct;
 import java.util.List;
 
 @RestController
@@ -16,6 +17,11 @@ import java.util.List;
 public class StudentRegistrationController {
 
     private final StudentCourseRegistrationService studentCourseRegistrationService;
+
+    @PostConstruct
+    public void init() {
+        studentCourseRegistrationService.addCourses();
+    }
 
     @GetMapping(value = "/find-student-by-course-name")
     public List<Student> findStudentsByCourseName(@RequestParam("courseName") String courseName) {
@@ -38,5 +44,10 @@ public class StudentRegistrationController {
         return new ResponseEntity<>(studentDto, HttpStatus.OK);
     }
 
+    @PutMapping("/v1/update-course-scores")
+    public ResponseEntity<?> updateStudentScores(@RequestBody StudentDto studentDto) {
+        studentCourseRegistrationService.addStudentScores(studentDto);
+        return new ResponseEntity<>(studentDto, HttpStatus.OK);
+    }
 
 }
