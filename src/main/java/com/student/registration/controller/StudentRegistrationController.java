@@ -44,7 +44,7 @@ public class StudentRegistrationController {
         return new ResponseEntity<>(studentDto, HttpStatus.OK);
     }
 
-    @PutMapping("/v1/update-course-scores")
+    @PutMapping("/update-course-scores")
     public ResponseEntity<?> updateStudentScores(@RequestBody StudentDto studentDto) {
         studentCourseRegistrationService.addStudentScores(studentDto);
         return new ResponseEntity<>(studentDto, HttpStatus.OK);

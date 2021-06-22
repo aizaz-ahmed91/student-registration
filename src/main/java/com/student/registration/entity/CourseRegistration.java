@@ -31,8 +31,8 @@ public class CourseRegistration implements Serializable {
     @JoinColumn(name = "COURSE_ID", referencedColumnName = "COURSE_ID", updatable = false, insertable = false)
     private Course course;
 
-    @OneToOne(cascade = CascadeType.ALL, targetEntity = CourseScores.class)
-    @JoinColumn(name = "COURSE_SCORE_ID", referencedColumnName = "COURSE_SCORE_ID", updatable = false, insertable = false)
+    @OneToOne(cascade = CascadeType.MERGE, targetEntity = CourseScores.class)
+    @JoinColumn(name = "COURSE_SCORE_ID", referencedColumnName = "COURSE_SCORE_ID", insertable = false)
     private CourseScores courseScores;
 
 }

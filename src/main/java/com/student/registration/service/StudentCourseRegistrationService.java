@@ -56,6 +56,10 @@ public class StudentCourseRegistrationService {
     public Student addStudentScores(StudentDto student) {
         LOGGER.debug("StudentCourseRegistrationService::addStudentScores: reached with: {}", student);
         Student studentNeedsToBeUpdated = studentRepository.findStudentByStudentNameAndCourseNameIn(student.getStudentName(), student.getCourseRegistered().stream().map(CourseDto::getCourseName).collect(Collectors.toSet()));
+        if(Objects.isNull(studentNeedsToBeUpdated))
+        {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No student found with the details");
+        }
         Map<String, CourseDto> courseScoreMap = student.getCourseRegistered().stream().collect(Collectors.toMap(CourseDto::getCourseName, cr -> cr, (crOld, crNew) -> crNew));
         studentNeedsToBeUpdated.getCourseRegistrations().stream().filter(Objects::nonNull).filter(cr -> courseScoreMap.keySet().contains(cr.getCourse().getCourseName())).forEach(courseRegistration ->
         {
